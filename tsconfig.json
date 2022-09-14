@@ -1,15 +1,11 @@
 {
   "compilerOptions": {
     "strict": true,
-    "target": "es5",
-    "module": "commonjs",
-    "esModuleInterop": true,
-    "skipLibCheck": true,
-    "forceConsistentCasingInFileNames": true,
-    "jsx": "react",
+    "target": "es6",
+    "module": "es2020",
+    "moduleResolution": "node",
+    "jsx": "react-jsx",
     "allowSyntheticDefaultImports": true,
-    "sourceMap": true,
-    "outDir": "./dist"
-  },
-  "include": ["src/"]
+    "sourceMap": true
+  }
 }
