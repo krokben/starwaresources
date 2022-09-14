@@ -9,7 +9,9 @@
   },
   "scripts": {
     "build": "webpack --config webpack.prod.js",
-    "dev": "webpack serve --open --config webpack.dev.js"
+    "dev": "concurrently \"npm:dev:server\" \"npm:dev:client\"",
+    "dev:server": "webpack serve --open --config webpack.dev.js",
+    "dev:client": "nodemon server.js"
   },
   "keywords": [],
   "license": "ISC",
@@ -21,9 +23,12 @@
     "@types/react-dom": "^18.0.6",
     "@typescript-eslint/eslint-plugin": "^5.37.0",
     "@typescript-eslint/parser": "^5.37.0",
+    "concurrently": "^7.4.0",
     "eslint": "^8.23.1",
     "eslint-plugin-react": "^7.31.8",
+    "express-basic-auth": "^1.2.1",
     "html-webpack-plugin": "^5.5.0",
+    "nodemon": "^2.0.19",
     "prettier": "^2.7.1",
     "react": "^18.2.0",
     "react-dom": "^18.2.0",
