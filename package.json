@@ -11,7 +11,8 @@
     "build": "webpack --config webpack.prod.js",
     "dev": "concurrently \"npm:dev:server\" \"npm:dev:client\"",
     "dev:server": "webpack serve --open --config webpack.dev.js",
-    "dev:client": "nodemon server.js"
+    "dev:client": "nodemon server.js",
+    "start": "node server.js"
   },
   "keywords": [],
   "license": "ISC",

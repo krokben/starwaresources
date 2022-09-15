@@ -2,7 +2,8 @@ import { useState, useEffect } from "react";
 import { useParams } from "react-router-dom";
 import List from "@mui/material/List";
 import ListItem from "@mui/material/ListItem";
-import Paper from "@mui/material/Paper";
+import Card from "@mui/material/Card";
+import CardContent from "@mui/material/CardContent";
 import Typography from "@mui/material/Typography";
 import { Resource } from "../types";
 
@@ -12,18 +13,6 @@ export enum Status {
   Success,
   Error,
 }
-
-const ListItemResource = ({ resource }: { resource: Resource }) => (
-  <ListItem>
-    <Paper sx={{ padding: 1 }} elevation={1}>
-      {Object.entries(resource).map(([key, value]) => (
-        <Typography key={key}>
-          {key}: {value}
-        </Typography>
-      ))}
-    </Paper>
-  </ListItem>
-);
 
 const Resource = ({ currentResource }: { currentResource: string }) => {
   const [status, setStatus] = useState<Status>(Status.Idle);
@@ -58,9 +47,22 @@ const Resource = ({ currentResource }: { currentResource: string }) => {
   }, []);
 
   return status === Status.Success && resource ? (
-    <List>
-      <ListItemResource resource={resource} />
-    </List>
+    <div style={{ display: "flex", flexDirection: "column", marginBottom: 16 }}>
+      {Object.entries(resource).map(([key, value]) => (
+        <Card key={key} variant="outlined">
+          <CardContent>
+            <Typography
+              sx={{ fontSize: 14 }}
+              color="text.secondary"
+              gutterBottom
+            >
+              {key}
+            </Typography>
+            <Typography component="div">{value}</Typography>
+          </CardContent>
+        </Card>
+      ))}
+    </div>
   ) : (
     <p>
       {status === Status.Error

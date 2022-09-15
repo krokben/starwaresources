@@ -4,8 +4,6 @@ const cors = require("cors");
 const basicAuth = require("express-basic-auth");
 const fetch = require("isomorphic-fetch");
 
-const ITEMS_PER_PAGE = 10;
-
 const authorizer = (username, password) => {
   const userMatches = basicAuth.safeCompare(username, "admin");
   const passwordMatches = basicAuth.safeCompare(password, "123");

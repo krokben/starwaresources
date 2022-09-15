@@ -1,7 +1,8 @@
 import { useState } from "react";
-import FormControl from "@mui/material/FormControl";
-import FormGroup from "@mui/material/FormGroup";
-import FormControlLabel from "@mui/material/FormControlLabel";
+import Box from "@mui/material/Box";
+import TextField from "@mui/material/TextField";
+import Select from "@mui/material/Select";
+import MenuItem from "@mui/material/MenuItem";
 import Button from "@mui/material/Button";
 
 const Search = ({
@@ -18,45 +19,40 @@ const Search = ({
   const [searchTerm, setSearchTerm] = useState<string>("");
 
   return (
-    <FormControl sx={{ m: 3 }} component="fieldset" variant="standard">
-      <form onSubmit={() => handleSearch(searchTerm)}>
-        <FormGroup>
-          <FormControlLabel
-            control={
-              <input
-                name="search"
-                value={searchTerm}
-                placeholder="Search..."
-                required
-                onChange={({ target }) => setSearchTerm(target.value)}
-              />
-            }
-            label="Name"
-          />
-          <FormControlLabel
-            control={
-              <select
-                name="resource"
-                placeholder="Resource"
-                value={currentResource}
-                required
-                onChange={({ target }) => setCurrentResource(target.value)}
-              >
-                {resources.map((resource) => (
-                  <option key={resource} value={resource}>
-                    {resource}
-                  </option>
-                ))}
-              </select>
-            }
-            label="Resource"
-          />
-        </FormGroup>
-        <Button variant="contained" type="submit">
-          Search
-        </Button>
-      </form>
-    </FormControl>
+    <Box
+      sx={{ padding: 2 }}
+      component="form"
+      onSubmit={(event) => {
+        event.preventDefault();
+        handleSearch(searchTerm);
+      }}
+    >
+      <TextField
+        sx={{ width: "100%", marginRight: 2, marginBottom: 2 }}
+        name="search"
+        value={searchTerm}
+        placeholder="Search..."
+        required
+        onChange={({ target }) => setSearchTerm(target.value)}
+      />
+      <Select
+        sx={{ width: "100%", marginRight: 2, marginBottom: 2 }}
+        name="resource"
+        placeholder="Resource"
+        value={currentResource}
+        required
+        onChange={({ target }) => setCurrentResource(target.value)}
+      >
+        {resources.map((resource) => (
+          <MenuItem key={resource} value={resource}>
+            {resource}
+          </MenuItem>
+        ))}
+      </Select>
+      <Button variant="contained" type="submit">
+        Search
+      </Button>
+    </Box>
   );
 };
 

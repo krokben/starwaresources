@@ -3,6 +3,9 @@ import Login from "./components/Login";
 import Search from "./components/Search";
 import Items from "./components/Items";
 import Resource from "./components/Resource";
+import Container from "@mui/material/Container";
+import Box from "@mui/material/Box";
+import Typography from "@mui/material/Typography";
 import Button from "@mui/material/Button";
 import { SearchResult } from "./types";
 import { BrowserRouter, Link, Route, Routes } from "react-router-dom";
@@ -158,18 +161,14 @@ const App = () => {
   };
 
   return (
-    <main>
-      {status !== Status.Fetching && status !== Status.Success && (
+    <Container sx={{ maxWidth: 1024 }}>
+      {resources.length === 0 ? (
         <Login
           fetchAndSetResources={fetchAndSetResources}
           status={status}
           errorMessage={errorMessage}
         />
-      )}
-      {status === Status.Fetching && (
-        <p>A long time ago in a galaxy far, far away...</p>
-      )}
-      {status === Status.Success && (
+      ) : (
         <>
           <Search
             resources={resources}
@@ -177,53 +176,83 @@ const App = () => {
             setCurrentResource={setCurrentResource}
             handleSearch={handleSearch}
           />
-          <BrowserRouter>
-            <Routes>
-              <Route
-                path="/"
-                element={
-                  <Items
-                    currentResource={currentResource}
-                    items={
-                      searchResults.length
-                        ? searchResults
-                        : getResourcesAsSearchResults(resources)
-                    }
-                  />
-                }
-              />
-              <Route
-                path={`resources/${currentResource}`}
-                element={
-                  <Link to="/" onClick={() => setSearchResults([])}>
-                    <Button variant="contained" color="secondary" type="submit">
-                      Go back
-                    </Button>
-                  </Link>
-                }
-              />
-              <Route
-                path={`resources/${currentResource}/:id`}
-                element={
-                  <>
-                    <Resource currentResource={currentResource} />
-                    <Link to="/" onClick={() => setSearchResults([])}>
-                      <Button
-                        variant="contained"
-                        color="secondary"
-                        type="submit"
-                      >
-                        Go back
-                      </Button>
-                    </Link>
-                  </>
-                }
-              />
-            </Routes>
-          </BrowserRouter>
+          <Box
+            sx={{
+              display: "flex",
+              justifyContent: "center",
+              alignItems: "center",
+              width: "100%",
+              minHeight: "20vh",
+              backgroundColor: "primary.light",
+            }}
+          >
+            {status === Status.Fetching && (
+              <Typography color="#fff">
+                A long time ago in a galaxy far, far away...
+              </Typography>
+            )}
+            {status === Status.Success && (
+              <>
+                <BrowserRouter>
+                  <Routes>
+                    <Route
+                      path="/"
+                      element={
+                        <Items
+                          currentResource={currentResource}
+                          items={
+                            searchResults.length
+                              ? searchResults
+                              : getResourcesAsSearchResults(resources)
+                          }
+                        />
+                      }
+                    />
+                    <Route
+                      path={`resources/${currentResource}`}
+                      element={
+                        <Link
+                          style={{ textDecoration: "none" }}
+                          to="/"
+                          onClick={() => setSearchResults([])}
+                        >
+                          <Button variant="contained" type="submit">
+                            Go back
+                          </Button>
+                        </Link>
+                      }
+                    />
+                    <Route
+                      path={`resources/${currentResource}/:id`}
+                      element={
+                        <div
+                          style={{
+                            display: "flex",
+                            flexDirection: "column",
+                            width: "100%",
+                          }}
+                        >
+                          <Resource currentResource={currentResource} />
+                          <Link
+                            style={{ textDecoration: "none" }}
+                            to="/"
+                            onClick={() => setSearchResults([])}
+                          >
+                            <Button variant="contained" type="submit">
+                              Go back
+                            </Button>
+                          </Link>
+                        </div>
+                      }
+                    />
+                  </Routes>
+                </BrowserRouter>
+              </>
+            )}
+          </Box>
         </>
       )}
-    </main>
+    </Container>
   );
 };
 

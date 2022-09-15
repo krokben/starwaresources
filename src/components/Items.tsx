@@ -12,11 +12,22 @@ const Items = ({
   currentResource: string;
   items: SearchResult[];
 }) => (
-  <List>
+  <List sx={{ width: "100%" }}>
     {items.map(({ id, name }: { id: string; name: string }) => (
-      <Link key={name} to={`/resources/${currentResource}/${id}`}>
+      <Link
+        key={name}
+        style={{ textDecoration: "none" }}
+        to={`/resources/${currentResource}/${id}`}
+      >
         <ListItem>
-          <Paper sx={{ padding: 1 }} elevation={1}>
+          <Paper
+            sx={{
+              width: "100%",
+              padding: 1,
+              "&:hover": { backgroundColor: "primary.dark", color: "#fff" },
+            }}
+            elevation={1}
+          >
             <Typography>{name}</Typography>
           </Paper>
         </ListItem>
