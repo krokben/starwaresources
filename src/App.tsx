@@ -1,5 +1,6 @@
 import { useState, useEffect } from "react";
 import Login from "./components/Login";
+import Resources from "./components/Resources";
 
 const ERROR_MESSAGE_UNAUTHORIZED = "Wrong name and/or password.";
 const ERROR_MESSAGE_SERVER = "Something went wrong. Please try again.";
@@ -20,6 +21,7 @@ const App = () => {
   const [errorMessage, setErrorMessage] = useState<ErrorMessage>(
     ERROR_MESSAGE_UNAUTHORIZED
   );
+  const [resources, setResources] = useState<string[]>([]);
 
   useEffect(() => {
     if (window.localStorage.getItem("login")) {
@@ -51,6 +53,7 @@ const App = () => {
       }
 
       const data = await response.json();
+      setResources(Object.keys(data));
 
       if (!window.localStorage.getItem("login")) {
         window.localStorage.setItem("login", login);
@@ -65,12 +68,18 @@ const App = () => {
 
   return (
     <main>
-      {status !== Status.Success && (
+      {status !== Status.Fetching && status !== Status.Success && (
         <Login
           fetchAndSetData={fetchAndSetData}
           status={status}
           errorMessage={errorMessage}
         />
+      )}
+      {status === Status.Fetching && (
+        <p>A long time ago in a galaxy far, far away...</p>
+      )}
+      {status === Status.Success && resources.length && (
+        <Resources resources={resources} />
       )}
     </main>
   );

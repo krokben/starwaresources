@@ -39,6 +39,7 @@
     "webpack-merge": "^5.8.0"
   },
   "dependencies": {
-    "cors": "^2.8.5"
+    "cors": "^2.8.5",
+    "isomorphic-fetch": "^3.0.0"
   }
 }

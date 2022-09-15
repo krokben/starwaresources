@@ -2,6 +2,9 @@ const express = require("express");
 const path = require("path");
 const cors = require("cors");
 const basicAuth = require("express-basic-auth");
+const fetch = require("isomorphic-fetch");
+
+const ITEMS_PER_PAGE = 10;
 
 const authorizer = (username, password) => {
   const userMatches = basicAuth.safeCompare(username, "admin");
@@ -14,8 +17,21 @@ const app = express();
 app.use(cors());
 app.use(basicAuth({ authorizer }));
 
-app.get("/", (req, res) => {
-  res.json({ hello: "world" });
+app.get("/", async (req, res) => {
+  try {
+    const response = await fetch("https://swapi.dev/api");
+
+    if (response.status !== 200) {
+      return res.sendStatus(response.status);
+    }
+
+    const data = await response.json();
+
+    return res.json(data);
+  } catch (error) {
+    console.error(error);
+    res.sendStatus(500);
+  }
 });
 
 const PORT = process.env.PORT || 4000;
