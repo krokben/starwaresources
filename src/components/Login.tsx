@@ -4,10 +4,15 @@ import FormGroup from "@mui/material/FormGroup";
 import FormControlLabel from "@mui/material/FormControlLabel";
 import FormHelperText from "@mui/material/FormHelperText";
 import Button from "@mui/material/Button";
+import { Status, ErrorMessage } from "../App";
 
 const Login = ({
+  status,
+  errorMessage,
   fetchAndSetData,
 }: {
+  status: Status;
+  errorMessage: ErrorMessage;
   fetchAndSetData: (name: string, password: string) => void;
 }) => {
   const [name, setName] = useState<string>("");
@@ -52,7 +57,9 @@ const Login = ({
           Login
         </Button>
       </form>
-      <FormHelperText>You can display an error</FormHelperText>
+      {status === Status.Error && (
+        <FormHelperText>{errorMessage}</FormHelperText>
+      )}
     </FormControl>
   );
 };
