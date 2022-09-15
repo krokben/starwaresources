@@ -51,12 +51,8 @@ const App = () => {
     }
   }, []);
 
-  const fetchAndSetResources = async (name: string, password: string) => {
+  const getResourcesFromServer = async (login: string) => {
     try {
-      setStatus(Status.Fetching);
-
-      const login = btoa(unescape(encodeURIComponent(`${name}:${password}`)));
-
       const response = await fetch("http://localhost:4000", {
         headers: {
           Authorization:
@@ -65,59 +61,100 @@ const App = () => {
       });
 
       if (response.status !== 200) {
-        setStatus(Status.Error);
-        setErrorMessage(
-          response.status === 401
-            ? ERROR_MESSAGE_UNAUTHORIZED
-            : ERROR_MESSAGE_SERVER
-        );
-        return;
+        return {
+          serverResources: resources,
+          serverCurrentResource: currentResource,
+          serverStatus: Status.Error,
+          serverErrorMessage:
+            response.status !== 401 ? errorMessage : ERROR_MESSAGE_SERVER,
+        };
       }
 
       const data = await response.json();
-      const resourceNames = Object.keys(data);
-      setCurrentResource(resourceNames[0]);
-      setResources(resourceNames);
+      const serverResources = Object.keys(data);
 
-      if (!window.localStorage.getItem("login")) {
-        window.localStorage.setItem("login", login);
-      }
-
-      setStatus(Status.Success);
+      return {
+        serverResources,
+        serverCurrentResource: serverResources[0],
+        serverStatus: Status.Success,
+        serverErrorMessage: errorMessage,
+      };
     } catch (error) {
       console.error(error);
-      setStatus(Status.Error);
+      return {
+        serverResources: resources,
+        serverCurrentResource: currentResource,
+        serverStatus: Status.Error,
+        serverErrorMessage: ERROR_MESSAGE_SERVER,
+      };
     }
   };
 
-  const fetchAndSetResource = async (resource: string, searchTerm: string) => {
-    try {
-      setStatus(Status.Fetching);
+  const fetchAndSetResources = async (name: string, password: string) => {
+    setStatus(Status.Fetching);
 
+    const login = btoa(unescape(encodeURIComponent(`${name}:${password}`)));
+
+    const {
+      serverResources,
+      serverCurrentResource,
+      serverStatus,
+      serverErrorMessage,
+    } = await getResourcesFromServer(login);
+
+    setCurrentResource(serverCurrentResource);
+    setResources(serverResources);
+
+    if (
+      serverStatus === Status.Success &&
+      !window.localStorage.getItem("login")
+    ) {
+      window.localStorage.setItem("login", login);
+    }
+
+    if (typeof serverErrorMessage !== "string") {
+      setErrorMessage(serverErrorMessage);
+    }
+    setStatus(serverStatus);
+  };
+
+  const getSearchResultsFromApi = async (searchTerm: string) => {
+    try {
       const response = await fetch(
-        `https://swapi.dev/api/${resource}?search=${searchTerm}`
+        `https://swapi.dev/api/${currentResource}?search=${searchTerm}`
       );
 
       if (response.status !== 200) {
-        setStatus(Status.Error);
-        setErrorMessage(ERROR_MESSAGE_SERVER);
-        return;
+        return [searchResults, Status.Error, ERROR_MESSAGE_SERVER];
       }
 
       const data = await response.json();
 
       if (data.count === 0) {
-        setErrorMessage(ERROR_MESSAGE_NO_RESULTS);
-        setStatus(Status.Error);
+        return [searchResults, Status.Error, ERROR_MESSAGE_NO_RESULTS];
       }
 
-      setCurrentResource(resource);
-      setSearchResults(data.results.map(getSearchResult));
-      setStatus(Status.Success);
+      return [data.results.map(getSearchResult), Status.Success, null];
     } catch (error) {
       console.error(error);
       setStatus(Status.Error);
+      return [searchResults, Status.Error, ERROR_MESSAGE_SERVER];
     }
+  };
+
+  const handleSearch = async (searchTerm: string) => {
+    setStatus(Status.Fetching);
+
+    const [apiResults, apiStatus, apiErrorMessage] =
+      await getSearchResultsFromApi(searchTerm);
+
+    setSearchResults(apiResults);
+
+    if (apiErrorMessage) {
+      setErrorMessage(apiErrorMessage);
+    }
+
+    setStatus(apiStatus);
   };
 
   return (
@@ -138,7 +175,7 @@ const App = () => {
             resources={resources}
             currentResource={currentResource}
             setCurrentResource={setCurrentResource}
-            fetchAndSetResource={fetchAndSetResource}
+            handleSearch={handleSearch}
           />
           <BrowserRouter>
             <Routes>

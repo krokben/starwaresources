@@ -8,18 +8,18 @@ const Search = ({
   resources,
   currentResource,
   setCurrentResource,
-  fetchAndSetResource,
+  handleSearch,
 }: {
   resources: string[];
   currentResource: string;
   setCurrentResource: (currentResource: string) => void;
-  fetchAndSetResource: (resource: string, searchTerm: string) => void;
+  handleSearch: (searchTerm: string) => void;
 }) => {
   const [searchTerm, setSearchTerm] = useState<string>("");
 
   return (
     <FormControl sx={{ m: 3 }} component="fieldset" variant="standard">
-      <form onSubmit={() => fetchAndSetResource(currentResource, searchTerm)}>
+      <form onSubmit={() => handleSearch(searchTerm)}>
         <FormGroup>
           <FormControlLabel
             control={
