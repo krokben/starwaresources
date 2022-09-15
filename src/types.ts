@@ -20,6 +20,7 @@ export type Person = {
 export type Resource = Person;
 
 export type SearchResult = {
+  id: string;
   name: string;
   url: string;
 };

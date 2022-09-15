@@ -6,17 +6,19 @@ import Button from "@mui/material/Button";
 
 const Search = ({
   resources,
+  currentResource,
   fetchAndSetResource,
 }: {
   resources: string[];
+  currentResource: string;
   fetchAndSetResource: (resource: string, searchTerm: string) => void;
 }) => {
   const [searchTerm, setSearchTerm] = useState<string>("");
-  const [resource, setResource] = useState<string>(resources[0]);
+  const [resource, setResource] = useState<string>(currentResource);
 
   return (
     <FormControl sx={{ m: 3 }} component="fieldset" variant="standard">
-      <form onSubmit={() => fetchAndSetResource(resource, searchTerm)}>
+      <form onSubmit={() => fetchAndSetResource(currentResource, searchTerm)}>
         <FormGroup>
           <FormControlLabel
             control={
@@ -35,7 +37,7 @@ const Search = ({
               <select
                 name="resource"
                 placeholder="Resource"
-                value={resource}
+                value={currentResource}
                 required
                 onChange={({ target }) => setResource(target.value)}
               >
