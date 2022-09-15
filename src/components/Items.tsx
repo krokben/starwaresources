@@ -2,17 +2,18 @@ import List from "@mui/material/List";
 import ListItem from "@mui/material/ListItem";
 import Paper from "@mui/material/Paper";
 import Typography from "@mui/material/Typography";
+import { SearchResult } from "../types";
 
-const Resources = ({ resources }: { resources: string[] }) => (
+const Items = ({ items }: { items: SearchResult[] }) => (
   <List>
-    {resources.map((resource) => (
-      <ListItem key={resource}>
+    {items.map(({ name }) => (
+      <ListItem key={name}>
         <Paper sx={{ padding: 1 }} elevation={1}>
-          <Typography>{resource}</Typography>
+          <Typography>{name}</Typography>
         </Paper>
       </ListItem>
     ))}
   </List>
 );
 
-export default Resources;
+export default Items;

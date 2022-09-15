@@ -9,18 +9,18 @@ import { Status, ErrorMessage } from "../App";
 const Login = ({
   status,
   errorMessage,
-  fetchAndSetData,
+  fetchAndSetResources,
 }: {
   status: Status;
   errorMessage: ErrorMessage;
-  fetchAndSetData: (name: string, password: string) => void;
+  fetchAndSetResources: (name: string, password: string) => void;
 }) => {
   const [name, setName] = useState<string>("");
   const [password, setPassword] = useState<string>("");
 
   const onSubmit = (event: SyntheticEvent) => {
     event.preventDefault();
-    fetchAndSetData(name, password);
+    fetchAndSetResources(name, password);
   };
 
   return (
@@ -53,7 +53,11 @@ const Login = ({
             label="Password"
           />
         </FormGroup>
-        <Button variant="contained" type="submit">
+        <Button
+          variant="contained"
+          type="submit"
+          disabled={status === Status.Fetching}
+        >
           Login
         </Button>
       </form>
