@@ -1,5 +1,6 @@
 const express = require("express");
 const path = require("path");
+const cors = require("cors");
 const basicAuth = require("express-basic-auth");
 
 const authorizer = (username, password) => {
@@ -10,10 +11,11 @@ const authorizer = (username, password) => {
 };
 
 const app = express();
+app.use(cors());
 app.use(basicAuth({ authorizer }));
 
 app.get("/", (req, res) => {
-  res.send("yay");
+  res.json({ hello: "world" });
 });
 
 const PORT = process.env.PORT || 4000;
