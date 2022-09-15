@@ -137,6 +137,7 @@ const App = () => {
           <Search
             resources={resources}
             currentResource={currentResource}
+            setCurrentResource={setCurrentResource}
             fetchAndSetResource={fetchAndSetResource}
           />
           <BrowserRouter>

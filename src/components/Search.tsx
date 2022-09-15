@@ -7,14 +7,15 @@ import Button from "@mui/material/Button";
 const Search = ({
   resources,
   currentResource,
+  setCurrentResource,
   fetchAndSetResource,
 }: {
   resources: string[];
   currentResource: string;
+  setCurrentResource: (currentResource: string) => void;
   fetchAndSetResource: (resource: string, searchTerm: string) => void;
 }) => {
   const [searchTerm, setSearchTerm] = useState<string>("");
-  const [resource, setResource] = useState<string>(currentResource);
 
   return (
     <FormControl sx={{ m: 3 }} component="fieldset" variant="standard">
@@ -39,7 +40,7 @@ const Search = ({
                 placeholder="Resource"
                 value={currentResource}
                 required
-                onChange={({ target }) => setResource(target.value)}
+                onChange={({ target }) => setCurrentResource(target.value)}
               >
                 {resources.map((resource) => (
                   <option key={resource} value={resource}>
